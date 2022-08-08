@@ -1,43 +1,42 @@
-import React, {useState, useEffect} from "react";
-import { useChatContext } from "stream-chat-react";
-import { ResultsDropdown } from './'
+import React, { useState, useEffect } from 'react';
+import { useChatContext } from 'stream-chat-react';
 
-import {SearchIcon} from '../assets';
+import { ResultsDropdown } from './'
+import { SearchIcon } from '../assets';
 
 const ChannelSearch = ({ setToggleContainer }) => {
     const { client, setActiveChannel } = useChatContext();
-    const [ query, setQuery ] = useState('');
-    const [ loading, setLoading ] = useState(false);
-    const [ teamChannels, setTeamChannels ] = useState([]);
-    const [ addDirectChannels, setDirectChannels ] = useState([]);
+    const [query, setQuery] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [teamChannels, setTeamChannels] = useState([])
+    const [directChannels, setDirectChannels] = useState([])
 
     useEffect(() => {
-        if(!query){
+        if(!query) {
             setTeamChannels([]);
             setDirectChannels([]);
         }
     }, [query])
 
-    const getChannels = async(text)=> {
-        try{
-            const channelResponse = await client.queryChannels({
-                type: 'team',
-                name: { $autocomplete: text },
+    const getChannels = async (text) => {
+        try {
+            const channelResponse = client.queryChannels({
+                type: 'team', 
+                name: { $autocomplete: text }, 
                 members: { $in: [client.userID]}
             });
-            const userResponse = await client.queryUsers({
+            const userResponse = client.queryUsers({
                 id: { $ne: client.userID },
                 name: { $autocomplete: text }
-            });
+            })
 
-            const [ channels, { users }] = await Promise.all([channelResponse, userResponse ]);
+            const [channels, { users }] = await Promise.all([channelResponse, userResponse]);
 
             if(channels.length) setTeamChannels(channels);
             if(users.length) setDirectChannels(users);
-        }catch(error){
-            setQuery('');
+        } catch (error) {
+            setQuery('')
         }
-
     }
     
     const onSearch = (event) => {
@@ -45,10 +44,10 @@ const ChannelSearch = ({ setToggleContainer }) => {
 
         setLoading(true);
         setQuery(event.target.value);
-        getChannels(event.target.value);
+        getChannels(event.target.value)
     }
 
-    const setChannel = ( channel ) => {
+    const setChannel = (channel) => {
         setQuery('');
         setActiveChannel(channel);
     }
@@ -70,7 +69,7 @@ const ChannelSearch = ({ setToggleContainer }) => {
             { query && (
                 <ResultsDropdown 
                     teamChannels={teamChannels}
-                    addDirectChannels={addDirectChannels}
+                    directChannels={directChannels}
                     loading={loading}
                     setChannel={setChannel}
                     setQuery={setQuery}
