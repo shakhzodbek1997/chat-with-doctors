@@ -1481,7 +1481,7 @@
   
   .rfu-image-previewer {
     flex: none;
-    margin-left: 12px;
+    margin-left: 0;
   }
   
   .rfu-image-previewer__image {
