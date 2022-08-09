@@ -1106,6 +1106,10 @@
   
   .str-chat__message-team--received {
     padding-left: 20px;
+    border: 1px solid lightblue;
+    margin: 0 20px;
+    border-radius: 10px;
+    margin-bottom: 8px;
   }
   
   .str-chat__message-replies-count-button {
